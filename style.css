@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+header nav a {
+    margin-right: 10px;
+}
+
+.flashes {
+    color: red;
+}
+
+#chat-box {
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.message {
+    margin-bottom: 5px;
+}
