@@ -7,6 +7,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import SQLAlchemyError
 import logging
+import socket
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -71,6 +72,13 @@ class ProfileForm(FlaskForm):
             if user:
                 raise ValidationError('That email is already in use. Please choose a different one.')
 
+@app.route('/')
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('profile'))
+    else:
+        return redirect(url_for('login'))
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -132,7 +140,31 @@ def profile():
 def chat():
     return render_template('chat.html')
 
+def get_local_ip():
+    """Получает локальный IP-адрес для доступа в локальной сети."""
+    try:
+        # Создаём временный сокет для получения IP-адреса
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(('8.8.8.8', 80))  # Подключаемся к публичному DNS-серверу
+            local_ip = s.getsockname()[0]
+        return local_ip
+    except Exception as e:
+        logger.error(f"Could not determine local IP: {e}")
+        return "127.0.0.1"
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Создание таблиц в базе данных
-    app.run(debug=True)
+
+    # Определяем порт и локальный IP
+    port = 5000
+    local_ip = get_local_ip()
+
+    # Выводим ссылки для доступа
+    print("\n=== Access URLs ===")
+    print(f"Local access:      http://127.0.0.1:{port}")
+    print(f"Local network:     http://{local_ip}:{port}")
+    print("===================\n")
+
+    # Запускаем сервер
+    app.run(debug=True, host='0.0.0.0', port=port)
