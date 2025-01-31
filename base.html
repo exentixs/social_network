@@ -1,29 +1,61 @@
 <!DOCTYPE html>
+<a href="{{ url_for('edit_profile') }}">Редактировать</a>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Network</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <!-- Верхняя панель -->
     <header>
         <nav>
-            <a href="{{ url_for('profile') }}">Profile</a>
-            <a href="{{ url_for('chat') }}">Chat</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <div class="logo">Social Network</div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('chat') }}">Чаты</a></li>
+                <li><a href="{{ url_for('profile') }}">Профиль</a></li>
+                <li><a href="{{ url_for('news') }}">Новости</a></li>
+            </ul>
+            <div class="profile-dropdown">
+                {% if current_user.is_authenticated %}
+                    <button class="profile-btn">
+                        <img src="{{ current_user.avatar or 'https://via.placeholder.com/40' }}" alt="Аватар">
+                    </button>
+                    <div class="dropdown-content">
+                        <p>{{ current_user.username }}</p>
+                        <p>{{ current_user.email }}</p>
+                        <p>ID: {{ current_user.id }}</p>
+                        <a href="{{ url_for('edit_profile') }}">Редактировать</a>
+                        <a href="{{ url_for('logout') }}">Выйти</a>
+                    </div>
+                {% else %}
+                    <div class="auth-buttons">
+                        <a href="{{ url_for('login') }}" class="auth-btn">Войти</a>
+                        <a href="{{ url_for('register') }}" class="auth-btn">Регистрация</a>
+                    </div>
+                {% endif %}
+            </div>
         </nav>
     </header>
+
+    <!-- Основное содержимое -->
     <main>
         {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <ul class="flashes">
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-          {% endif %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
     </main>
+
+    <!-- Подвал сайта -->
+    <footer>
+        <p>&copy; 2023 Social Network. Все права защищены.</p>
+    </footer>
 </body>
 </html>
