@@ -1,0 +1,9 @@
+<div class="edit-profile-container">
+    <h2>Редактировать профиль</h2>
+    <form method="POST" onsubmit="event.preventDefault(); submitForm('edit_profile')">
+        <input type="text" name="username" value="{{ current_user.username }}" required>
+        <input type="email" name="email" value="{{ current_user.email }}" required>
+        <input type="text" name="avatar" value="{{ current_user.avatar }}" placeholder="Аватар (URL)">
+        <button type="submit">Сохранить</button>
+    </form>
+</div>

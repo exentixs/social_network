@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Network</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Верхняя панель -->
+    <header>
+        <nav>
+            <div class="logo">Social Network</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="loadContent('chat')">Чаты</a></li>
+                <li><a href="#" onclick="loadContent('profile')">Профиль</a></li>
+                <li><a href="#" onclick="loadContent('news')">Новости</a></li>
+            </ul>
+            <div class="profile-dropdown">
+                {% if current_user.is_authenticated %}
+                    <button class="profile-btn">
+                        <img src="{{ current_user.avatar or 'https://via.placeholder.com/40' }}" alt="Аватар">
+                    </button>
+                    <div class="dropdown-content">
+                        <p>{{ current_user.username }}</p>
+                        <p>{{ current_user.email }}</p>
+                        <p>ID: {{ current_user.id }}</p>
+                        <a href="#" onclick="loadContent('edit_profile')">Редактировать</a>
+                        <a href="{{ url_for('logout') }}">Выйти</a>
+                    </div>
+                {% else %}
+                    <a href="#" onclick="loadContent('login')" class="auth-btn">Войти</a>
+                    <a href="#" onclick="loadContent('register')" class="auth-btn">Регистрация</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- Основное содержимое -->
+    <main id="content">
+        <!-- Контент будет загружаться сюда -->
+    </main>
+
+    <!-- Подвал сайта -->
+    <footer>
+        <p>&copy; 2023 Social Network. Все права защищены.</p>
+    </footer>
+
+    <!-- Скрипт для динамической загрузки контента -->
+    <script>
+        async function loadContent(page) {
+            const response = await fetch(`/${page}`);
+            const html = await response.text();
+            document.getElementById('content').innerHTML = html;
+        }
+
+        // Загрузить чаты по умолчанию
+        window.onload = () => loadContent('chat');
+    </script>
+</body>
+</html>

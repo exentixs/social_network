@@ -1,0 +1,10 @@
+<div class="profile-container">
+    <h2>Профиль</h2>
+    <div class="profile-info">
+        <img src="{{ current_user.avatar or 'https://via.placeholder.com/150' }}" alt="Аватар">
+        <p>Никнейм: {{ current_user.username }}</p>
+        <p>Email: {{ current_user.email }}</p>
+        <p>ID: {{ current_user.id }}</p>
+    </div>
+    <a href="#" onclick="loadContent('edit_profile')" class="edit-btn">Редактировать профиль</a>
+</div>

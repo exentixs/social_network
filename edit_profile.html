@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="edit-profile-container">
+    <h2>Редактировать профиль</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <label for="username">Никнейм:</label>
+        <input type="text" id="username" name="username" value="{{ current_user.username }}" required>
+        <label for="profile_description">Описание профиля:</label>
+        <textarea id="profile_description" name="profile_description">{{ current_user.profile_description }}</textarea>
+        <label for="avatar">Аватар (URL):</label>
+        <input type="text" id="avatar" name="avatar" value="{{ current_user.avatar }}">
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
+{% endblock %}
